@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<div style="margin-left: 16px; margin-right: 16px">
+  {% for bor_request in borrow_requests %}
+    <a style="color: black">{{ bor_request.book }}</a>
+      <p>
+        <b>status -- </b>
+        {% if bor_request.status == 5 %}
+          <a style="color: red"><b>{{ bor_request.get_status_display }}</b></a>
+        {% elif bor_request.status == 1 %}
+          <a style="color: rgba(0, 0, 0, 0.48)">{{ bor_request.get_status_display }}</a>
+        {% elif bor_request.status == 4 %}
+            <b><a style="color: green">{{ bor_request.get_status_display }} {% if bor_request.overdue %}, <b style="color: red">delayed</b>{% endif %}</a></b>
+        {% else %}
+          <a style="color: green">{{ bor_request.get_status_display }}</a>
+        {% endif %}
+      </p>
+  {% endfor %}
+</div>
+
+{% endblock %}
