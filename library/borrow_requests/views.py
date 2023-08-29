@@ -4,8 +4,7 @@ from django.shortcuts import redirect
 from django.views import View
 from django.views.generic import ListView
 from django.utils import timezone
-from main_app.models import *
-from main_app.forms import *
+from borrow_requests.models import BorrowRequestModel
 
 
 class ApproveRequestBookView(LoginRequiredMixin, View):
@@ -45,7 +44,7 @@ class TakeBookView(LoginRequiredMixin, View):
             borrow_request.due_date = new_date
             borrow_request.save()
             book = borrow_request.book
-            book.available = False
+            book.is_available = False
             book.save()
 
         return redirect('users:user_profile_view', username=request.user.username)
@@ -66,7 +65,7 @@ class ReturnBookView(LoginRequiredMixin, View):
             borrow_request.complete_date = current_date
             borrow_request.save()
             book = borrow_request.book
-            book.available = True
+            book.is_available = True
             book.save()
 
         return redirect('users:user_profile_view', username=request.user.username)

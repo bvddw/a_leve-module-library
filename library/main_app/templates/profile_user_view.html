@@ -44,11 +44,11 @@
       {% if user.is_librarian %}
         <a class="btn btn-outline-dark" href="{% url 'borrow_requests:borrow_request_history_view' %}">Check history of Borrow requests</a>
       {% endif %}
-
-      <a class="btn btn-outline-dark" href="{% url 'users:set_user_data_view' username=user.username %}">Set data</a>
-      <a class="btn
+      {% if user.username == request.user.username %}
+        <a class="btn btn-outline-dark" href="{% url 'users:set_user_data_view' username=user.username %}">Set data</a>
+        <a class="btn btn-outline-dark" href="{% url 'users:set_user_password_view' username=user.username %}">Set password</a>
+      {% endif %}
     </div>
-     btn-outline-dark" href="{% url 'users:set_user_password_view' username=user.username %}">Set password</a>
   </div>
 
 {% endblock %}

@@ -3,8 +3,9 @@ from django.shortcuts import get_object_or_404, render
 from django.views import View
 from django.views.generic import DetailView, CreateView
 from django.urls import reverse
-from main_app.models import *
-from .forms import *
+from books.models import Book
+from .models import Genre
+from .forms import CreateGenreForm, UpdateGenreForm
 
 
 class GenreDetailView(DetailView):

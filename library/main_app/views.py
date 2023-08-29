@@ -1,12 +1,13 @@
-from django.contrib.auth import login, logout
+from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import LoginView
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render, reverse
 from django.views import View
 from django.views.generic import DetailView
-from .models import *
-from .forms import *
+from .models import MyUser
+from borrow_requests.models import BorrowRequestModel
+from .forms import LoginUserForm, RegistrateUserForm, SetUserDataForm, SetNewPassword
 
 
 class LoginUserView(LoginView):
@@ -91,6 +92,9 @@ class SetUserDataView(LoginRequiredMixin, View):
     login_url = 'login_user'
 
     def get(self, request, username):
+        if username != request.user.username:
+            url = reverse('users:user_profile_view', kwargs={'username': request.user.username})
+            return HttpResponseRedirect(url)
         user = get_object_or_404(MyUser, username=username)
         fields = {
             "first_name": user.first_name,

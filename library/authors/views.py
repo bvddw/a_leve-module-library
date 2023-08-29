@@ -1,10 +1,11 @@
 from django.views import View
 from django.views.generic import DetailView, CreateView
-from main_app.models import *
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
-from .forms import *
+from books.models import Book
+from .models import Author
+from .forms import CreateAuthorForm, UpdateAuthorForm
 
 
 class AuthorDetailView(DetailView):

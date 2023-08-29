@@ -68,7 +68,7 @@
           Genres
         </button>
         <ul class="dropdown-menu dropdown-menu-dark">
-          {% if request.user.is_librarian %}
+          {% if request.user.is_librarian or request.user.is_staff %}
           <li><a class="dropdown-item active" style="background-color: rgb(52, 58, 64)" href="{% url 'genres:create_genre_view' %}">Create Genre</a></li>
           {% endif %}
           {% for genre in genres %}
@@ -81,7 +81,7 @@
           Authors
         </button>
         <ul class="dropdown-menu dropdown-menu-dark">
-          {% if request.user.is_librarian %}
+          {% if request.user.is_librarian or request.user.is_staff %}
           <li><a class="dropdown-item active" style="background-color: rgb(52, 58, 64)" href="{% url 'authors:create_author_view' %}">Create Author</a></li>
           {% endif %}
           {% for author in authors %}
@@ -89,7 +89,9 @@
           {% endfor %}
         </ul>
       </div>
+      {% if request.user.is_librarian or request.user.is_staff %}
       <a style="margin-left: 16px; background-color: rgb(108, 117, 125)" href="{% url 'books:create_book_view' %}" class="btn btn-dark">Create Book</a>
+      {% endif %}
     </div>
 
     <div>

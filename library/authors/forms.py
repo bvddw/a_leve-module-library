@@ -1,5 +1,5 @@
 from django import forms
-from main_app.models import Author
+from authors.models import Author
 
 
 class CreateAuthorForm(forms.Form):
@@ -24,7 +24,7 @@ class CreateAuthorForm(forms.Form):
 
     def clean(self):
         name = self.cleaned_data['name']
-        if len(Author.objects.filter(name=name)):
+        if Author.objects.filter(name=name):
             self.add_error('name', 'Author with this name already exist.')
 
     def create_author(self):
@@ -53,5 +53,5 @@ class UpdateAuthorForm(forms.Form):
 
     def clean(self):
         name = self.cleaned_data['name']
-        if len(Author.objects.filter(name=name)):
+        if Author.objects.filter(name=name):
             self.add_error('name', 'Author with this name already exist.')

@@ -2,9 +2,11 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, redirect, render, reverse
 from django.views import View
+from django.utils import timezone
 from django.views.generic import DetailView, CreateView
-from main_app.models import *
-from .forms import *
+from borrow_requests.models import BorrowRequestModel
+from books.models import Book
+from .forms import CreateBookForm, UpdateBookForm
 
 
 class BookDetailView(DetailView):
@@ -19,8 +21,8 @@ class BookDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         if self.request.user.is_authenticated:
-            if len(BorrowRequestModel.objects.filter(borrower=self.request.user, book=self.get_object())):
-                context['bor_request'] = BorrowRequestModel.objects.get(borrower=self.request.user, book=self.get_object())
+            if BorrowRequestModel.objects.filter(borrower=self.request.user, book=self.get_object(), status__in=[1, 2, 3]):
+                context['bor_request'] = BorrowRequestModel.objects.get(borrower=self.request.user, book=self.get_object(), status__in=[1, 2, 3])
         return context
 
 
@@ -30,7 +32,7 @@ class RequestBookView(LoginRequiredMixin, View):
     def get(self, request, isbn):
         user = request.user
         book = Book.objects.get(isbn=isbn)
-        if len(BorrowRequestModel.objects.filter(borrower=user, book=book)):
+        if BorrowRequestModel.objects.filter(borrower=user, book=book, status__in=[1, 2, 3]):
             return redirect('users:user_profile_view', username=user.username)
         self.model.objects.create(book=book, borrower=user, request_date=timezone.now().date())
 

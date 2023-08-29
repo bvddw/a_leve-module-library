@@ -1,5 +1,5 @@
 from django import forms
-from main_app.models import Genre
+from .models import Genre
 
 
 class CreateGenreForm(forms.Form):

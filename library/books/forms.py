@@ -1,6 +1,9 @@
 from django import forms
 from django.utils import timezone
-from main_app.models import *
+from main_app.models import MyUser
+from books.models import Book
+from authors.models import Author
+from genres.models import Genre
 
 
 class CreateBookForm(forms.Form):
@@ -76,10 +79,10 @@ class CreateBookForm(forms.Form):
 
     def clean(self):
         title = self.cleaned_data['title']
-        if len(Book.objects.filter(title=title)):
+        if Book.objects.filter(title=title):
             self.add_error('title', 'Book with this title already exist.')
         isbn = self.cleaned_data['isbn']
-        if len(Book.objects.filter(isbn=isbn)):
+        if Book.objects.filter(isbn=isbn):
             self.add_error('isbn', 'Book with this isbn already exist.')
         date = self.cleaned_data['published_date']
         if date > timezone.now().date():
@@ -178,7 +181,7 @@ class UpdateBookForm(forms.Form):
 
     def clean(self):
         title = self.cleaned_data['title']
-        if len(Book.objects.filter(title=title)):
+        if Book.objects.filter(title=title):
             self.add_error('title', 'Book with this title already exist.')
         date = self.cleaned_data['published_date']
         if date > timezone.now().date():

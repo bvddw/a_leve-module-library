@@ -1,4 +1,5 @@
-from .models import Genre, Author
+from genres.models import Genre
+from authors.models import Author
 
 
 def authors(request):
