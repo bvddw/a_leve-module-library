@@ -24,8 +24,11 @@ class CreateAuthorForm(forms.Form):
 
     def clean(self):
         name = self.cleaned_data['name']
-        if Author.objects.filter(name=name):
-            self.add_error('name', 'Author with this name already exist.')
+        try:
+            author = Author.objects.get(name=name)
+            self.add_error('name', 'Author with this name already exists.')
+        except Author.DoesNotExist:
+            pass
 
     def create_author(self):
         Author.objects.create(**self.cleaned_data)
@@ -53,5 +56,8 @@ class UpdateAuthorForm(forms.Form):
 
     def clean(self):
         name = self.cleaned_data['name']
-        if Author.objects.filter(name=name):
-            self.add_error('name', 'Author with this name already exist.')
+        try:
+            author = Author.objects.get(name=name)
+            self.add_error('name', 'Author with this name already exists.')
+        except Author.DoesNotExist:
+            pass

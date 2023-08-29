@@ -79,11 +79,17 @@ class CreateBookForm(forms.Form):
 
     def clean(self):
         title = self.cleaned_data['title']
-        if Book.objects.filter(title=title):
+        try:
+            book = Book.objects.get(title=title)
             self.add_error('title', 'Book with this title already exist.')
+        except Book.DoesNotExist:
+            pass
         isbn = self.cleaned_data['isbn']
-        if Book.objects.filter(isbn=isbn):
+        try:
+            book = Book.objects.get(isbn=isbn)
             self.add_error('isbn', 'Book with this isbn already exist.')
+        except Book.DoesNotExist:
+            pass
         date = self.cleaned_data['published_date']
         if date > timezone.now().date():
             self.add_error('published_date', 'Unreal date for field "published date".')
@@ -181,8 +187,11 @@ class UpdateBookForm(forms.Form):
 
     def clean(self):
         title = self.cleaned_data['title']
-        if Book.objects.filter(title=title):
+        try:
+            book = Book.objects.get(title=title)
             self.add_error('title', 'Book with this title already exist.')
+        except Book.DoesNotExist:
+            pass
         date = self.cleaned_data['published_date']
         if date > timezone.now().date():
             self.add_error('published_date', 'Unreal date for field "published date".')

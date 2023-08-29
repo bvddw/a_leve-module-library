@@ -15,8 +15,11 @@ class CreateGenreForm(forms.Form):
 
     def clean(self):
         name = self.cleaned_data['name']
-        if len(Genre.objects.filter(name=name)):
+        try:
+            genre = Genre.objects.get(name=name)
             self.add_error('name', 'Genre with this name already exist.')
+        except Genre.DoesNotExist:
+            pass
 
     def create_genre(self):
         Genre.objects.create(**self.cleaned_data)
@@ -35,5 +38,8 @@ class UpdateGenreForm(forms.Form):
 
     def clean(self):
         name = self.cleaned_data['name']
-        if len(Genre.objects.filter(name=name)):
+        try:
+            genre = Genre.objects.get(name=name)
             self.add_error('name', 'Genre with this name already exist.')
+        except Genre.DoesNotExist:
+            pass
