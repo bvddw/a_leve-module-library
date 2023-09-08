@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+  <link rel="stylesheet" href="static/css/base_style.css">
+  <title>LIBRARY</title>
+  <style>
+    .header-logo {
+      font-size: 30px;
+      display: flex;
+      justify-content: space-around;
+      text-decoration: none;
+      color: black;
+    }
+    .header-logo:hover {
+      text-decoration: underline;
+      text-decoration-color: black;
+    }
+    .header-logo:active {
+      text-decoration: none;
+    }
+    .reactivate-form,
+    .about-page,
+    .admin-page-link,
+    .user,
+    .login,
+    .logout,
+    .register,
+    .create-article{
+      font-size: 16px;
+      text-decoration: none;
+      color: black;
+    }
+    .reactivate-form:hover,
+    .about-page:hover,
+    .admin-page-link:hover,
+    .user:hover,
+    .login:hover,
+    .logout:hover,
+    .register:hover,
+    .create-article:hover{
+      text-decoration: underline;
+      text-decoration-color: black;
+    }
+    .reactivate-form:active,
+    .about-page:active,
+    .admin-page-link:active,
+    .user:active,
+    .login:active,
+    .logout:active,
+    .register:active,
+    .create-article:active{
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+<div class="header-block">
+  <div class="header">
+    <a href="{% url 'main_view' %}" class="header-logo">LIBRARY</a>
+  </div>
+
+  <div class="navbar" style="display: flex; justify-content: space-between; margin-left: 16px; margin-right: 16px">
+    <div style="display: flex">
+      <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          Genres
+        </button>
+        <ul class="dropdown-menu dropdown-menu-dark">
+          {% if request.user.is_librarian or request.user.is_staff %}
+          <li><a class="dropdown-item active" style="background-color: rgb(52, 58, 64)" href="{% url 'genres:create_genre_view' %}">Create Genre</a></li>
+          {% endif %}
+          {% for genre in genres %}
+          <li><a class="dropdown-item active" style="background-color: rgb(52, 58, 64)" href="{% url 'genres:genre_detail_view' name=genre.name %}">{{ genre.name }}</a></li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="dropdown" style="margin-left: 16px">
+        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          Authors
+        </button>
+        <ul class="dropdown-menu dropdown-menu-dark">
+          {% if request.user.is_librarian or request.user.is_staff %}
+          <li><a class="dropdown-item active" style="background-color: rgb(52, 58, 64)" href="{% url 'authors:create_author_view' %}">Create Author</a></li>
+          {% endif %}
+          {% for author in authors %}
+          <li><a class="dropdown-item active" style="background-color: rgb(52, 58, 64)" href="{% url 'authors:author_detail_view' name=author.name %}">{{ author.name }}</a></li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% if request.user.is_librarian or request.user.is_staff %}
+      <a style="margin-left: 16px; background-color: rgb(108, 117, 125)" href="{% url 'books:create_book_view' %}" class="btn btn-dark">Create Book</a>
+      {% endif %}
+    </div>
+
+    <div>
+      {% if not request.user.username %}
+      <a class="register" style="margin-right: 6px" href="{% url 'users:register_user_view' %}">Register</a>
+      <a class="login" style="margin-right: 6px" href="{% url 'users:login_user_view' %}">Login</a>
+      {% else %}
+        <a class="user" style="margin-right: 6px" href="{% url 'users:user_profile_view' username=request.user.username %}">{{ request.user }}</a>
+        {% if request.user.is_staff %}
+          <a class="admin-page-link" style="margin-right: 6px" href="/admin">Admin page</a>
+        {% endif %}
+        <a class="logout" style="margin-right: 6px" href="{% url 'users:logout_user_view' %}">Logout</a>
+      {% endif %}
+      <a class="about-page" style="margin-right: 6px" href="{% url 'about_view' %}">About us</a>
+    </div>
+  </div>
+</div>
+  {% block content %}
+  {% endblock %}
+  {% if page_obj.has_other_pages %}
+    <nav style="padding-left: 20px" aria-label="Page navigation example">
+      <ul class="pagination">
+        <li class="page-item">
+          <a class="page-link" href="?page=1" aria-label="Previous">
+            <span aria-hidden="true" style="color: black;">&laquo;</span>
+          </a>
+        </li>
+        {% for p in paginator.page_range %}
+          {% if page_obj.number == p %}
+            <li class="page-item"><a class="page-link" style="background-color: black; color: white" href="?page={{ p }}">{{ p }}</a></li>
+          {% else %}
+            <li class="page-item"><a class="page-link" style="color: black;" href="?page={{ p }}">{{ p }}</a></li>
+          {% endif %}
+        {% endfor %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ paginator.num_pages }}" aria-label="Next">
+            <span aria-hidden="true" style="color: black;">&raquo;</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+  {% endif %}
+
+
+</body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+</html>

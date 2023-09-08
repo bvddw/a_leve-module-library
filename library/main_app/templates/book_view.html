@@ -1,0 +1,15 @@
+<div style="margin-bottom: 5px; border-width: 1px; border-color: black; padding: 10px 20px; border-radius: 12px">
+  <a style="color: black; text-decoration: underline; font-size: 20px; font-weight: bold" href="{% url 'books:book_detail_view' isbn=book.isbn %}">{{ book.title }}</a>
+  <div>
+    {% for author in book.authors.all %}
+      <a href="#" style="margin-right: 4px; color: rgba(0, 0, 0, 0.48)">{{ author.name }}</a>
+    {% endfor %}
+  </div>
+  <div>
+    {% for genre in book.genres.all %}
+      <a href="#" style="margin-right: 4px; color: rgba(0, 0, 0, 0.48)">{{ genre.name }}</a>
+    {% endfor %}
+  </div>
+  <p style="color: rgba(0, 0, 0, 0.48)">Created at: <a>{{ book.published_date }}</a></p>
+  <p style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis">{{ book.summary }}</p>
+</div>

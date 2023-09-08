@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% load book_in_list %}
+
+{% block content %}
+  {% for book in books %}
+    {% display_books book %}
+  {% endfor %}
+{% endblock %}

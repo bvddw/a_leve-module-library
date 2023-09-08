@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div style="padding: 10px 20px">
+    <h2>{{ author.name }}</h2>
+    <p>{{ author.bio }}</p>
+
+    {% if books %}
+    <p><b>Books by this author: </b></p>
+    <lu>
+      {% for book in books %}
+        <li><a style="color: black" href="{% url 'books:book_detail_view' isbn=book.isbn %}">{{ book.title }}</a></li>
+      {% endfor %}
+    </lu>
+    {% endif %}
+    {% if request.user.is_librarian%}
+      <a href="{% url 'authors:update_author_view' name=author.name %}" class="btn btn-outline-warning">Update</a>
+      <a href="{% url 'authors:delete_author_view' name=author.name %}" class="btn btn-outline-danger">Delete</a>
+    {% endif %}
+  </div>
+{% endblock %}

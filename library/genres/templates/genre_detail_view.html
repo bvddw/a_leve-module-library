@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div style="padding: 10px 20px">
+    <h2>{{ genre.name }}</h2>
+
+    {% if books %}
+    <p><b>Books connected to this genre: </b></p>
+    <ul>
+      {% for book in books %}
+        <li><a style="color: black" href="{% url 'books:book_detail_view' isbn=book.isbn %}">{{ book.title }}</a></li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+    {% if request.user.is_librarian%}
+      <a href="{% url 'genres:update_genre_view' name=genre.name %}" class="btn btn-outline-warning">Update</a>
+      <a href="{% url 'genres:delete_genre_view' name=genre.name %}" class="btn btn-outline-danger">Delete</a>
+    {% endif %}
+
+  </div>
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+  <div style="padding: 10px">
+    <h2>{{ user.username }} {% if user.get_full_name %}(<a>{{ user.get_full_name }}</a>) {% endif %}</h2>
+
+    {% if request.user.is_librarian %}
+      {% if lib_requests %}
+        <b>Request to check:</b>
+        <ul>
+          {% for request in lib_requests %}
+            <li>
+              <p>{{ request }} -- <a style="color: green" href="{% url 'borrow_requests:approve_request_book_view' id=request.id %}">approve</a> <a href="{% url 'borrow_requests:decline_request_book_view' id=request.id %}" style="color: red">decline</a></p>
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endif %}
+
+    {% if requests %}
+    <b>Requests:</b>
+    <ul>
+      {% for request in requests %}
+        <li>
+          <a style="color: black" href="{% url 'books:book_detail_view' isbn=request.book.isbn %}">{{ request.book }}</a>
+          <p>
+            <b>status -- </b>
+            {% if request.status == 5 %}
+              <a style="color: red"><b>{{ request.get_status_display }}</b></a>
+            {% elif request.status == 1 %}
+              <a style="color: rgba(0, 0, 0, 0.48)">{{ request.get_status_display }}</a>
+            {% elif request.status == 4 %}
+                <b><a style="color: green">{{ request.get_status_display }} {% if request.overdue %}, <b style="color: red">delayed</b>{% endif %}</a></b>
+            {% else %}
+              <a style="color: green">{{ request.get_status_display }}</a>
+            {% endif %}
+          </p>
+        </li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+    <div style="justify-content: center">
+      {% if user.is_librarian %}
+        <a class="btn btn-outline-dark" href="{% url 'borrow_requests:borrow_request_history_view' %}">Check history of Borrow requests</a>
+      {% endif %}
+      {% if user.username == request.user.username %}
+        <a class="btn btn-outline-dark" href="{% url 'users:set_user_data_view' username=user.username %}">Set data</a>
+        <a class="btn btn-outline-dark" href="{% url 'users:set_user_password_view' username=user.username %}">Set password</a>
+      {% endif %}
+    </div>
+  </div>
+
+{% endblock %}
